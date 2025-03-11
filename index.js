@@ -5,6 +5,8 @@ const {MongoClient, ServerApiVersion} = require('mongodb');
 const MONGO_USERNAME = process.env.MONGODB_USERNAME;
 const MONGO_PASSWORD = process.env.MONGODB_PASSWORD;
 
+const port = process.env.PORT || 4000;
+
 //Connection string: mongodb+srv://akhanakhan:MongoDBAkhan30012004%21%40%23@ygwbr.yemnu.mongodb.net/?retryWrites=true&w=majority&appName=ygwbr
 const uri = `mongodb+srv://${MONGO_USERNAME}:${MONGO_PASSWORD}@ygwbr.yemnu.mongodb.net/?retryWrites=true&w=majority&appName=ygwbr`
 
@@ -34,6 +36,10 @@ async function connectDB() {
         console.log(err);
     }
 }
+
+app.get("/", (req, res) => {
+    return res.status(200).json({"message": "Hello World!"});
+})
 
 app.post('/find_record', async (req, res) => {
     try {
@@ -95,8 +101,8 @@ app.post('/insert_record', async (req, res) => {
     }
 });
 
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, async () => {
+const PORT = process.env.PORT || 4000;
+app.listen(port, async () => {
     await connectDB();
     console.log(`🚀 Server running on port ${PORT}`);
 });
