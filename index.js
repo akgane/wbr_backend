@@ -15,6 +15,13 @@ console.log(`MongoDB URI: ${uri}`);
 const app = express();
 app.use(express.json());
 
+app.use((req, res, next) => {
+    res.header("Access-Control-Allow-Origin", "*"); // Разрешает запросы от любых доменов
+    res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
+    res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
+    next();
+});
+
 const client = new MongoClient(uri, {
     serverApi: {
         version: ServerApiVersion.v1,
