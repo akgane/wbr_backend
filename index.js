@@ -8,7 +8,6 @@ const MONGO_PASSWORD = process.env.MONGODB_PASSWORD;
 
 const port = process.env.PORT || 4000;
 
-//Connection string: mongodb+srv://akhanakhan:MongoDBAkhan30012004%21%40%23@ygwbr.yemnu.mongodb.net/?retryWrites=true&w=majority&appName=ygwbr
 const uri = `mongodb+srv://${MONGO_USERNAME}:${MONGO_PASSWORD}@ygwbr.yemnu.mongodb.net/?retryWrites=true&w=majority&appName=ygwbr`
 
 // console.log(`MongoDB URI: ${uri}`);
