@@ -1,6 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const {MongoClient, ServerApiVersion} = require('mongodb');
+const { perfomance } = require('perf_hooks');
 
 const MONGO_USERNAME = process.env.MONGODB_USERNAME;
 const MONGO_PASSWORD = process.env.MONGODB_PASSWORD;
@@ -10,7 +11,7 @@ const port = process.env.PORT || 4000;
 //Connection string: mongodb+srv://akhanakhan:MongoDBAkhan30012004%21%40%23@ygwbr.yemnu.mongodb.net/?retryWrites=true&w=majority&appName=ygwbr
 const uri = `mongodb+srv://${MONGO_USERNAME}:${MONGO_PASSWORD}@ygwbr.yemnu.mongodb.net/?retryWrites=true&w=majority&appName=ygwbr`
 
-console.log(`MongoDB URI: ${uri}`);
+// console.log(`MongoDB URI: ${uri}`);
 
 const app = express();
 app.use(express.json());
@@ -49,6 +50,7 @@ app.get("/", (req, res) => {
 })
 
 app.post('/find_record', async (req, res) => {
+    const startTime = performance.now();
     try {
         const {answer, prevAnswer, collectionName} = req.body;
         if (!prevAnswer || !answer) {
@@ -72,13 +74,20 @@ app.post('/find_record', async (req, res) => {
         const options = {returnDocument: "after"};
 
         const record = await collection.findOneAndUpdate(filter, update, options);
+
+        const endTime = performance.now();
+        console.log(`find_record processed in ${(endTime - startTime).toFixed(2)} ms`);
+
         res.json(record || {});
     } catch (err) {
+        const endTime = performance.now();
+        console.log(`find_record got error. Processed in ${(endTime - startTime).toFixed(2)} ms`);
         res.status(500).json({error: err.message});
     }
 });
 
 app.post('/insert_record', async (req, res) => {
+    const startTime = performance.now();
     try {
         const {guess, prev, win, emoji, reason, cached_count, collectionName} = req.body;
         console.log(guess, prev, win, emoji, reason, cached_count);
@@ -102,8 +111,14 @@ app.post('/insert_record', async (req, res) => {
 
         const document = {guess, prev, win, emoji, reason, cached_count: cached_count || 0};
         await collection.insertOne(document);
+
+        const endTime = performance.now();
+        console.log(`insert_record processed in ${(endTime - startTime).toFixed(2)} ms`);
+
         res.json({success: true, document});
     } catch (error) {
+        const endTime = performance.now();
+        console.log(`insert_record got error. Processed in ${(endTime - startTime).toFixed(2)} ms`);
         res.status(500).json({error: error.message});
     }
 });
